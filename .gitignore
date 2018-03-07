@@ -1,3 +1,12 @@
+**/*.whl
+**/*.pyc
+**/*.conf
+**/*.pem
+**/*.txt
+**/.cache
+.idea/**
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
