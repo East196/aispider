@@ -12,7 +12,7 @@ from xml.sax.saxutils import escape
 from lxml import etree
 from bs4 import BeautifulSoup
 
-from .http_request import HttpRequest
+from aispider.http_request import HttpRequest
 
 
 class AutoCrawler(object):
