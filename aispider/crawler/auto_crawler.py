@@ -5,14 +5,15 @@
 """
 
 from __future__ import print_function
-import re
+
 import json
+import re
 from xml.sax.saxutils import escape
 
-from lxml import etree
 from bs4 import BeautifulSoup
+from lxml import etree
 
-from aispider.http_request import HttpRequest
+from aispider.core.http_request import HttpRequest
 
 
 class AutoCrawler(object):
