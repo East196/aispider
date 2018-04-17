@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 import requests
 from bs4 import BeautifulSoup
 
@@ -17,12 +17,21 @@ def get_soup(url):
     return soup
 
 
+def get_comment_soup(url):
+    r = requests.get(url, headers=headers)
+    # print(r.content.decode("utf8"))
+    html = r.content.decode("utf8").replace("<!--", "").replace("-->", "")
+    soup = BeautifulSoup(html, "lxml")
+    # print(soup.prettify())
+    return soup
+
+
 def get_json(url):
     r = requests.get(url, headers=headers)
     return r.json()
 
 
 def get_domain(url):
-    split = urlparse.urlsplit(url)
+    split = urlsplit(url)
     domain = "{scheme}://{netloc}".format(scheme=split.scheme, netloc=split.netloc)
     return domain

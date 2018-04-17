@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from lxml import etree
 
 from aispider.core.http_request import HttpRequest
+from aispider.core.request import get_soup, get_json, get_domain
 
 
 class AutoCrawler(object):
@@ -117,18 +118,24 @@ def get_doc(root, doc_data):
             print(cssselector)
             if root.attrib['list'] == 'False':
                 print("list false")
-                yield soup.select_one(cssselector).string, data
+                a = soup.select_one(cssselector)
+                yield from rule(root, a, data)
             if root.attrib['list'] == 'True':
                 print("list true")
                 for a in soup.select(cssselector):
-                    if root.attrib['name']:
-                        data = dict(data, **{root.attrib['name']: a.get_text()})
-                    if len(root):
-                        items = item_extract(a, root)
-                        data = dict(data, **items)
-                        yield data, data
-                    else:
-                        yield a.get_text(), data
+                    yield from rule(root, a, data)
+
+
+def rule(root, a, data):
+    if root.attrib['name']:
+        data = dict(data, **{root.attrib['name']: a.get_text()})
+    if len(root):
+        print(root)
+        items = item_extract(a, root)
+        data = dict(data, **items)
+        yield data, data
+    else:
+        yield a.get_text(), data
 
 
 def item_extract(soup, root):
@@ -144,7 +151,10 @@ def item_extract(soup, root):
         if child.attrib['type'] == 'soup':
             sub_cssselector = child.attrib['cssselector']
             print(soup, sub_cssselector)
-            items[child.attrib['name']] = soup.select_one(sub_cssselector).string
+            if child.get('attr'):
+                items[child.attrib['name']] = soup.select_one(sub_cssselector)[child.get('attr')]
+            else:
+                items[child.attrib['name']] = soup.select_one(sub_cssselector).string
     return items
 
 

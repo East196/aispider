@@ -14,7 +14,7 @@ https://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
 
 
 ## 数据存储
-pip install happybase pymongo
+pip install happybase pymongo redis dataset pymysql
 
 
 ## 加密

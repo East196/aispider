@@ -17,7 +17,7 @@ class ConfigAccountProvider(object):
     def __init__(self, path="F:\cje\influence.conf"):
         self.config = configparser.ConfigParser()
         self.config.read(path)
-        self.k = pyDes.des("8888", pyDes.CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
+        self.k = pyDes.des("vvvv8888", pyDes.CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
 
     def delete_all(self, account_type='weibo'):
         pass
@@ -51,9 +51,10 @@ class HttpRequest(object):
         :type delay: int
         """
         if cookie_jar is None:
-            provider = ConfigAccountProvider()
-            cookie_jar_provider = WeiboCookieJarProvider(provider.find_all())
-            self.cookie_jar = cookie_jar_provider.get_random()
+            # provider = ConfigAccountProvider()
+            # cookie_jar_provider = WeiboCookieJarProvider(provider.find_all())
+            # self.cookie_jar = cookie_jar_provider.get_random()
+            self.cookie_jar = http.cookiejar.LWPCookieJar()
         else:
             self.cookie_jar = http.cookiejar.LWPCookieJar()
         cookie_support = urllib.request.HTTPCookieProcessor(self.cookie_jar)
