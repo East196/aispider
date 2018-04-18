@@ -24,6 +24,7 @@ def tieba_summary(tieba_name):
 
 def tieba_article_ids(tieba_name, req_num_min=1000):
     topics, ties, rens = tieba_summary(tieba_name)
+    is_today = 1
     pn = 0
     while pn < topics and is_today is 1:
         pn_url = "http://tieba.baidu.com/f?kw={tieba_name}&ie=utf-8&pn={pn}".format(tieba_name=tieba_name, pn=pn)
@@ -44,13 +45,15 @@ def tieba_article_ids(tieba_name, req_num_min=1000):
                 is_today = 0
             if req_num > req_num_min:
                 _, article_id = os.path.split(href)
-                yield article_id
+                yield reply, title, article_id
         pn += 50
 
 
 def article_lines(article_id):
     article_url = "http://tieba.baidu.com/p/{article_id}".format(article_id=article_id)
     soup = get_comment_soup(article_url)
+    title = soup.select_one(".core_title h1")["title"]
+    yield "## " + title
     for item in soup.select(".pb_content #j_p_postlist .j_l_post")[:1]:
         contents = item.select_one("cc .j_d_post_content").contents
         for content in contents:
@@ -82,11 +85,13 @@ def download(src, file_path):
 
 
 if __name__ == '__main__':
-    article_ids = list(tieba_article_ids("猫", 500))
+    article_ids = list(tieba_article_ids("猫", 1000))
     print(article_ids)
 
-    for article_id in article_ids:
-        with open("{article_id}.md".format(article_id=article_id), "w", encoding="utf-8") as fp:
+    for reply, title, article_id in article_ids:
+        if ":" not in reply:
+            continue
+        with open("{reply}_{title}.md".format(reply=reply.replace(":","h"), title=title), "w", encoding="utf-8") as fp:
             lines = article_lines(article_id)
             for line in lines:
                 print(line)
