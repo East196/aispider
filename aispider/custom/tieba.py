@@ -49,7 +49,8 @@ def tieba_article_ids(tieba_name, req_num_min=1000):
         pn += 50
 
 
-def article_lines(article_id):
+def article_lines(reply, title, article_id):
+    dir = "{reply}_{article_id}_{title}/{article_id}/".format(article_id=article_id, reply=reply.replace(":", "h"), title=title)
     article_url = "http://tieba.baidu.com/p/{article_id}".format(article_id=article_id)
     soup = get_comment_soup(article_url)
     title = soup.select_one(".core_title h1")["title"]
@@ -66,9 +67,10 @@ def article_lines(article_id):
                     path = urlsplit(src).path
                     name = md5(src)
                     ext = os.path.splitext(path)[1] if os.path.splitext(path)[1] else ".jpg"
-                    file_path = article_id + "/" + name + ext
+                    file_path = dir + name + ext
                     download(src, file_path)
-                    mdimg = "![{name}]({file_path})".format(name=name, file_path=file_path)
+                    img_path = article_id + "/" + name + ext
+                    mdimg = "![{name}]({img_path})".format(name=name, img_path=img_path)
                     line = str(content).strip().replace(str(img.prettify()).strip(), mdimg)
                     yield line
             else:
@@ -76,9 +78,6 @@ def article_lines(article_id):
 
 
 def download(src, file_path):
-    file_dir, file_name = os.path.split(file_path)
-    if file_dir and not os.path.exists(file_dir):
-        os.makedirs(file_dir)
     pic = requests.get(src)
     with open(file_path, 'wb') as fp:
         fp.write(pic.content)
@@ -91,8 +90,12 @@ if __name__ == '__main__':
     for reply, title, article_id in article_ids:
         if ":" not in reply:
             continue
-        with open("{reply}_{title}.md".format(reply=reply.replace(":","h"), title=title), "w", encoding="utf-8") as fp:
-            lines = article_lines(article_id)
+        dir = "{reply}_{article_id}_{title}/{article_id}/".format(article_id=article_id, reply=reply.replace(":", "h"), title=title)
+        if dir and not os.path.exists(dir):
+            os.makedirs(dir)
+        with open("{reply}_{article_id}_{title}/{article_id}.md".format(article_id=article_id, reply=reply.replace(":", "h"), title=title), "w",
+                  encoding="utf-8") as fp:
+            lines = article_lines(reply, title, article_id)
             for line in lines:
                 print(line)
                 fp.write(line + "\n\n")
