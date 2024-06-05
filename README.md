@@ -21,6 +21,11 @@ pip install happybase pymongo
 pip install pyDes
 
 ## AIGC参考
-[coder-hxl/x-crawl: Flexible Node.js AI-assisted crawler library](https://github.com/coder-hxl/x-crawl) [x-crawl](https://coder-hxl.github.io/x-crawl/cn/)
-[VinciGit00/Scrapegraph-ai: Python scraper based on AI](https://github.com/VinciGit00/Scrapegraph-ai) [ScrapeGraphAI](https://scrapegraphai.com/)
+- [ ] x-crawl
+[coder-hxl/x-crawl: Flexible Node.js AI-assisted crawler library](https://github.com/coder-hxl/x-crawl) 
+[x-crawl](https://coder-hxl.github.io/x-crawl/cn/)
+- [ ] Scrapegraph-ai
+[VinciGit00/Scrapegraph-ai: Python scraper based on AI](https://github.com/VinciGit00/Scrapegraph-ai) 
+[ScrapeGraphAI](https://scrapegraphai.com/)
+- [ ] [最好的34个网络爬取工具AI工具 - Toolify](https://www.toolify.ai/zh/category/ai-web-scraping)
 
